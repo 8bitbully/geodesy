@@ -1,3 +1,19 @@
+%   Ellipsoid:
+%   
+%   
+%
+%
+
+% References:
+%       Comparison of Different Algorithms between Geocentric and Geodetic Coordinates
+%       Harita Dergisi Temmuz 2011 Sayı 146
+%
+%       https://avesis.ktu.edu.tr//yfaruk
+%
+%
+% for the updated version : github.com/solounextracto
+% @author: 
+% @date: 20202811
 classdef NivoEllipsoid < matlab.mixin.CustomDisplay
     methods (Access = protected)
         function header = getHeader(this)

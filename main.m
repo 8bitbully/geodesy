@@ -1,6 +1,14 @@
 clc;clearvars;
 ellipsoid = ReferenceEllipsoid('grs80');
 
+% p = Pafta.PAFTA_50;
+% [B, L] = paftaParser(p , 39.5, 37);
+% 
+% [cidx, area, edge] = paftaEdge(p);
+% 
+% [x, y, z] = geog2geoc(ellipsoid,B(cidx), L(cidx));
+
+% [B2, L2] = parse50(p);
 %%
 % geocentric
 % B = 41.27737178;
@@ -10,7 +18,7 @@ ellipsoid = ReferenceEllipsoid('grs80');
 % beta = 39.08885772;
 % L = 32;
 
-% [x, y, z] = geog2geoc(ellipsoid, beta, L, 'reduced');
+% [x, y, z] = geog2geoc(ellipsoid, B, L);
 
 %%
 % 
@@ -23,12 +31,12 @@ ellipsoid = ReferenceEllipsoid('grs80');
 %%
 
 % JTP2:
-% B1 = 40.19043611;
-% L1 = 33.20710278;
-% B2 = 41.74048611;
-% L2 = 33.72431111;
-% 
-% [A1, A2, S] = JTP2(ellipsoid, B1, B2, L1, L2);
+B1 = 40.19043611;
+L1 = 33.20710278;
+B2 = 41.74048611;
+L2 = 33.72431111;
+
+[A1, A2, S] = JTP2(ellipsoid, B1, B2, L1, L2);
 %%
 
 % JTP1:

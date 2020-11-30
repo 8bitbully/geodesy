@@ -1,3 +1,25 @@
+%   Ellipsoid:
+%   
+%   [x, y, z] = geog2geoc(ellipsoid, B, L, latType, h)
+%   [B, L, h] = geoc2geog(ellipsoid, x, y, z)
+%   [A1, A2, S] = JTP2(ellipsoid, B1, B2, L1, L2)
+%   [B2, L2, A2] = JTP1(ellipsoid, B1, L1, A1, S)
+%   G = lat2eqdist(ellipsoid, B)
+%   B = dist2eqlat(ellipsoid, G)
+%   Sp = longt2dist(ellipsoid, L1, L2, B)
+%   F = ellipsoidArea(ellipsoid, B1, B2, L1, L2)
+%   [N, M, R, varargout] = radiusCurveture(ellipsoid, B, A)
+
+% References:
+%       Comparison of Different Algorithms between Geocentric and Geodetic Coordinates
+%       Harita Dergisi Temmuz 2011 Sayı 146
+%
+%       https://avesis.ktu.edu.tr//yfaruk
+%
+%
+% for the updated version : github.com/solounextracto
+% @author: 
+% @date: 20202811
 classdef Ellipsoid < NivoEllipsoid
     properties (Dependent = true, Access = public)
         SemimajorAxis double
@@ -80,11 +102,15 @@ classdef Ellipsoid < NivoEllipsoid
     methods
         
         %   args:
-        %
-        %
+        %       ellipsoid: ReferenceEllipsoid object
+        %       B: geographic latitude
+        %       L: geographic longitude
+        %       latType: latitude type "geographic, geocentric, reduced"
+        %       h: ellipsoid height "default: 0"
         %   returns:
-        %
-        %
+        %       x: geocentric coordinate x
+        %       y: geocentric coordinate y
+        %       z: geocentric coordinate z
         function [x, y, z] = geog2geoc(ellipsoid, B, L, latType, h)
             if nargin < 4
                 latType = 'geographic';
@@ -126,12 +152,16 @@ classdef Ellipsoid < NivoEllipsoid
         end
         
         %   args:
-        %
-        %
+        %       "Pollard Method"
+        %       ellipsoid: ReferenceEllipsoid object
+        %       x: geocentric coordinate x
+        %       y: geocentric coordinate y
+        %       z: geocentric coordinate z
         %   returns:
-        %
-        %
-        function [b, l, h] = geoc2geog(ellipsoid, x, y, z)
+        %       B: geographic latitude
+        %       L: geographic longitude
+        %       h: ellipsoid height
+        function [B, L, h] = geoc2geog(ellipsoid, x, y, z)
             a_ = ellipsoid.SemimajorAxis;
             b_ = ellipsoid.SemiminorAxis;
             eu = ellipsoid.SecondEccentricity; eu2 = eu * eu;
@@ -159,16 +189,21 @@ classdef Ellipsoid < NivoEllipsoid
             h = (s - root) / r;
             if h < 0; h = (s + root) / r; end
             
-            b = atanf((z_ + eu2*z__) / sqrt(x_*x_ + y_*y_));
-            l = atan2f(y_, x_);
+            B = atanf((z_ + eu2*z__) / sqrt(x_*x_ + y_*y_));
+            L = atan2f(y_, x_);
         end
         
         %   args:
-        %
-        %
+        %       "Vincenty Methods"
+        %       ellipsoid: ReferenceEllipsoid object
+        %       B1: latitude Pi
+        %       B2: latitude Pk
+        %       L1: longitude Pi
+        %       L2: longitude Pk
         %   returns:
-        %
-        %
+        %       A1: geodesic curve azimuth
+        %       A2: geodesic curve azimuth
+        %       S: edge distance
         function [A1, A2, S] = JTP2(ellipsoid, B1, B2, L1, L2)
             b_ = ellipsoid.SemiminorAxis;
             f = ellipsoid.Flattening;
@@ -215,11 +250,16 @@ classdef Ellipsoid < NivoEllipsoid
         end
         
         %   args:
-        %
-        %
+        %       "Vincenty Methods"
+        %       ellipsoid: ReferenceEllipsoid object
+        %       B1: latitude Pi
+        %       L1: longitude Pi
+        %       A1: geodesic curve azimuth
+        %       S: edge distance
         %   returns:
-        %
-        %
+        %       B2: latitude Pk
+        %       L2: longitude Pk
+        %       A2: geodesic curve azimuth
         function [B2, L2, A2] = JTP1(ellipsoid, B1, L1, A1, S)
             b_ = ellipsoid.SemiminorAxis;
             f = ellipsoid.Flattening;
@@ -267,11 +307,10 @@ classdef Ellipsoid < NivoEllipsoid
         end
         
         %   args:
-        %
-        %
+        %       ellipsoid: ReferenceEllipsoid object
+        %       B : latitude
         %   returns:
-        %
-        %
+        %       G: meridian arc part
         function G = lat2eqdist(ellipsoid, B)
             a_  = ellipsoid.SemimajorAxis ;
             b_  = ellipsoid.SemiminorAxis ;
@@ -292,11 +331,10 @@ classdef Ellipsoid < NivoEllipsoid
         end
         
         %   args:
-        %
-        %
+        %       ellipsoid: ReferenceEllipsoid object   
+        %       G: meridian arc part
         %   returns:
-        %
-        %
+        %       B: latitude
         function B = dist2eqlat(ellipsoid, G)
             a_  = ellipsoid.SemimajorAxis ;
             b_  = ellipsoid.SemiminorAxis ;
@@ -320,11 +358,12 @@ classdef Ellipsoid < NivoEllipsoid
         end
         
         %   args:
-        %
-        %
+        %       ellipsoid: ReferenceEllipsoid object   
+        %       L1: longitude Pi
+        %       L2: longitude Pk
+        %       B: latitude
         %   returns:
-        %
-        %
+        %       Sp: parallel circle arc
         function Sp = longt2dist(ellipsoid, L1, L2, B)
             a_  = ellipsoid.SemimajorAxis ;
             b_  = ellipsoid.SemiminorAxis ;
@@ -349,11 +388,14 @@ classdef Ellipsoid < NivoEllipsoid
         end
 
         %   args:
-        %
-        %
+        %       "Area of the ellipsoid bounded by latitude and longitude"
+        %       ellipsoid: ReferenceEllipsoid object   
+        %       B1: latitude Pi
+        %       B2: latitude Pk
+        %       L1: longitude Li
+        %       L2: longitude Lk
         %   returns:
-        %
-        %
+        %       F: Area
         function F = ellipsoidArea(ellipsoid, B1, B2, L1, L2)
 
             b_  = ellipsoid.SemiminorAxis ;
@@ -386,11 +428,14 @@ classdef Ellipsoid < NivoEllipsoid
         end
         
         %   args:
-        %
-        %
+        %       ellipsoid: ReferenceEllipsoid object   
+        %       B: latitude
+        %       A: is the radius of curvature of the azimuth normal section curve
         %   returns:
-        %
-        %
+        %       N: Major Curvature radii
+        %       M: Major Curvature radii
+        %       R: gauss radius of curvature (average curvature)
+        %       Ra: Radius of curvature of the normal section curve with azimuth
         function [N, M, R, varargout] = radiusCurveture(ellipsoid, B, A)
             a_ = ellipsoid.SemimajorAxis;
             eu = ellipsoid.SecondEccentricity; eu2 = eu * eu;
