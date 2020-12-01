@@ -1,5 +1,5 @@
 clc;clearvars;
-ellipsoid = ReferenceEllipsoid('grs80');
+ellipsoid = ReferenceEllipsoid('hayford');
 
 % p = Pafta.PAFTA_50;
 % [B, L] = paftaParser(p , 39.5, 37);
@@ -11,10 +11,12 @@ ellipsoid = ReferenceEllipsoid('grs80');
 % [B2, L2] = parse50(p);
 %%
 % geocentric
+
 % B = 41.27737178;
 % L = 39.21259856;
 
 % reduced 
+
 % beta = 39.08885772;
 % L = 32;
 
@@ -31,15 +33,17 @@ ellipsoid = ReferenceEllipsoid('grs80');
 %%
 
 % JTP2:
-B1 = 40.19043611;
-L1 = 33.20710278;
-B2 = 41.74048611;
-L2 = 33.72431111;
 
-[A1, A2, S] = JTP2(ellipsoid, B1, B2, L1, L2);
+% B1 = 40.19043611;
+% L1 = 33.20710278;
+% B2 = 41.74048611;
+% L2 = 33.72431111;
+% 
+% [A1, A2, S] = JTP2(ellipsoid, B1, B2, L1, L2);
 %%
 
 % JTP1:
+
 % B1 = 39.50765833;
 % L1 = 39.35715278;
 % A1 = 141.6904861;
@@ -49,16 +53,19 @@ L2 = 33.72431111;
 
 %%
 % G to B;
+
 % G = 4314212.496;
 % B = dist2eqlat(ellipsoid, G);
 
 %%
 % B to G;
+
 % B = 38.0000;
 % G = lat2eqdist(ellipsoid, B);
 
 %%
 % L to Sp
+
 % L1 = 26;
 % L2 = 45;
 % B = 36;
@@ -67,6 +74,7 @@ L2 = 33.72431111;
 
 %% 
 % Area
+
 % B1 = 39; B2 = 40;
 % L1 = 28; L2 = 29;
 % 
@@ -74,6 +82,7 @@ L2 = 33.72431111;
 
 %%
 % radius of curvature
+
 % B = 41.27737178;
 % A = 42.33333333;
 

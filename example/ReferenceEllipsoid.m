@@ -1,7 +1,6 @@
 % ReferenceEllipsoid :
 %
 % Example:
-%
 % ellipsoid = ReferenceEllipsoid('grs80')
 % ----
 % B = 39.5 ; L = 37;
@@ -43,8 +42,6 @@
 % for the updated version : github.com/solounextracto
 % @author: 
 % @date: 20202811
-% 
-%               
 classdef ReferenceEllipsoid < Ellipsoid
     properties
         Name string

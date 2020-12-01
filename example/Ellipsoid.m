@@ -20,10 +20,6 @@
 % for the updated version : github.com/solounextracto
 % @author: 
 % @date: 20202811
-%
-%   TODO:  * function signatures
-%               * Error handling
-%               * Test
 classdef Ellipsoid < NivoEllipsoid
     properties (Dependent = true, Access = public)
         SemimajorAxis double
