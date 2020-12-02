@@ -1,54 +1,35 @@
 clearvars; clc;
+% Version: 9.9.0.1467703 (R2020b)
+
 main = localfunctions;
+[kose, kenar, alan, agirlik, jeosentrik] = getFunctions;
 % elipsoid secimi
 e = ReferenceEllipsoid('hayford');
 
 % pafta secimi
-pf = Pafta.PAFTA_25;
+pf = Pafta.PAFTA_100;
 
 % pafta indexleri
 [cidx, area, edge] = paftaEdge(pf);
-[B, L] = paftaParser(pf, 39.5, 37);
+[B, L] = paftaParser(pf, 39.5, 40.5);
 
 % Pafta köse koordinatlari:
-PAFTA_KOSE = [double(cidx)', B(cidx)', L(cidx)'];
+PAFTA_KOSE = kose(cidx, B, L);
 
 % Kenar uzunluklari:
-for i = 1 : size(edge, 1)
-    KU.G(i,1) = abs(lat2eqdist(e, B(edge(i, 1))) - lat2eqdist(e, B(edge(i, 2))));
-    if B(edge(i, 1)) == B(edge(i, 2))
-        KU.Sp(i, 1) = longt2dist(e, L(edge(i, 1)), L(edge(i, 2)), B(edge(i, 1)));
-        [~, ~, KU.S(i, 1)] = JTP2(e, B(edge(i, 1)), B(edge(i, 2)), L(edge(i, 1)), L(edge(i, 2)));
-        KU.diff(i, 1) = KU.Sp(i, 1) - KU.S(i, 1);
-    end
-end
-
-KENAR = round([double(edge) ,KU.G, KU.Sp, KU.S, KU.diff], 5);
+KENAR = kenar(e, edge, B, L);
 
 % Pafta Alani
-for i = 1 : size(area,1)
-    PA.F(i, 1) = ellipsoidArea(e, B(area(i, 1)), B(area(i, 3)), L(area(i, 1)), L(area(i, 3)));
-    [PA.km(i, 1), PA.hektar(i, 1), PA.donum(i, 1)] = areaConvert(PA.F(i, 1));
-end
-
-ALAN = round([double(area), PA.F, PA.km, PA.hektar, PA.donum], 5);
+ALAN = alan(e, area, B, L);
 
 % Agirlik merkezi yaricaplari
-for i = 1: size(area, 1)
-    MA.Bort(i, 1) = (B(area(i, 1)) + B(area(i, 3))) / 2;
-    [MA.N(i, 1), MA.M(i, 1), MA.R(i, 1)] = radiusCurveture(e, MA.Bort(i, 1));
-end
+% return: - N - R - M -
+AGIRLIK = agirlik(e, area, B);
 
-AGIRLIK = round([double(area), MA.N, MA.M, MA.R], 3);
-
-
-% Jeosantrik koordinatlar
-[x, y, z] = geog2geoc(e, B(cidx), L(cidx));
-JEOCENTRIC = [double(cidx)', x', y', z'];
-
+% Jeosentrik Koordinatlar
+GEOCENTRIC = jeosentrik(e, cidx, B, L);
 
 % terminal log ciktisini yazdirma
-
 % diary hayford-25.txt
 % PAFTA_KOSE
 % fprintf('--------------------------------')
@@ -62,23 +43,24 @@ JEOCENTRIC = [double(cidx)', x', y', z'];
 % diary off
 
 % tablolari excel'e yazdirma fonksiyonu
-excelWriter = main{2};
-
-% Alanları cevirme
-function [km, hektar, donum] = areaConvert(m)
-    km = m / 1e6;
-    hektar = m / 1e4;
-    donum =  m / 1e3;
-end
+excelWriter = main{1};
 
 % tablolari excel'e yazdirma fonksiyonu
 %   args:
-%       content: table // AGIRLIK  etc.
+%       content: table // AGIRLIK, KENAR  etc.
 %       filename: str // grs80-agirlik-50 etc.
 %   returns:
 %       excel file.
-function writeExcel(content, filename)
-    T = table(content);
+%
+%   Example:
+%   command window:
+%   excelWriter('hayford-25', PAFTA_KOSE, KENAR, ALAN, AGIRLIK, GEOCENTRIC)
+function writeExcel(filename, varargin)
+    n = length(varargin);
+%     T = table(content);
     filename = [filename, '.xlsx'];
-    writetable(T,filename,'Sheet','MyNewSheet','WriteVariableNames',false);
+    for i = 1 : n
+%         writetable(T,filename,'Sheet','MyNewSheet','WriteVariableNames',false);
+        writetable(varargin{i}, filename,'Sheet',inputname(i+1) ,'WriteVariableNames',true);
+    end
 end

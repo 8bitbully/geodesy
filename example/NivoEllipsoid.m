@@ -4,13 +4,8 @@
 %
 %
 
-% References:
-%       Comparison of Different Algorithms between Geocentric and Geodetic Coordinates
-%       Harita Dergisi Temmuz 2011 Sayı 146
 %
-%       https://avesis.ktu.edu.tr//yfaruk
-%
-%
+% Version: 9.9.0.1467703 (R2020b)
 % for the updated version : github.com/solounextracto
 % @author: 
 % @date: 20202811

@@ -14,12 +14,14 @@
 %       Comparison of Different Algorithms between Geocentric and Geodetic Coordinates
 %       Harita Dergisi Temmuz 2011 Sayı 146
 %
-%       https://avesis.ktu.edu.tr//yfaruk
+%       Doç.Dr. FARUK YILDIRIM | AVESİS. https://avesis.ktu.edu.tr/yfaruk/dokumanlar. Erişim 28 Kasım 2020.
 %
 %
 % for the updated version : github.com/solounextracto
 % @author: 
 % @date: 20202811
+%
+% Version: 9.9.0.1467703 (R2020b)
 %
 %   TODO:  * function signatures
 %               * Error handling

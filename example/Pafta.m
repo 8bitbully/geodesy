@@ -1,3 +1,40 @@
+% Pafta Parser:
+% Pafta.PAFTA_100 ; Pafta.PAFTA_50 ; Pafta.PAFTA_25 ; 
+% Pafta secimi yapildiktan sonra Pafta objesini methodlarda
+% kullanarak B, L koordinatlarini ve koordinat indexleri, alan indexleri
+% kenar indexlerini elde edebiliriz.
+% 
+% """
+%   Bu uygulama Jeodezi-I dersi odevi için yapilmistir ve odev cozumu icin
+%   uygulanmalidir. Aksi halde yanlıs sonuclar elde edilebilir.
+% """
+%       2--------------3
+%       |                   |
+%       |   100000    |
+%       |                   |
+%       |                   |
+%      [1]-------------4
+%
+%       paf = Pafta.PAFTA_100;
+%
+%       [B, L] = paftaParser(paf, b, l) ;
+%       """
+%       b: 100000 olcekli paftanin sol alt cografi koordinati
+%       l:  100000 olcekli paftanin sol alt cografi koordinati
+%       """
+%       
+%       [cidx, area, edge] = paftaEdge(paf);
+%       """
+%       cidx: koordinat index
+%       area: alan index
+%       edge: kenar index
+%       """
+%
+
+%
+% @author:
+% @date: 20202811
+%
 classdef Pafta
     properties
         INDEX
