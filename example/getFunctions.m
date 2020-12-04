@@ -18,9 +18,22 @@ end
 
 % Pafta köse koordinatlari:
 % PAFTA_KOSE = [double(cidx)', B(cidx)', L(cidx)'];
-function PAFTA_KOSE = findCorner(cidx, B, L)
+function PAFTA_KOSE = findCorner(cidx, B, L, type)
+    if nargin < 4
+        type = 'degrees';
+    end
     Latitude = B(cidx)';
     Longitude = L(cidx)';
+    if strcmp(type, 'dms')
+        for i = 1:length(cidx)
+            dmsB = degrees2dms(Latitude(i));
+            dmsL = degrees2dms(Longitude(i));
+            out.Latitude{i} = [num2str(dmsB(1)), char(0176), num2str(dmsB(2)), char(39), num2str(dmsB(3)), char(34)];
+            out.Longitude{i} = [num2str(dmsL(1)), char(0176), num2str(dmsL(2)), char(39), num2str(dmsL(3)), char(34)];
+        end
+        Latitude = out.Latitude';
+        Longitude = out.Longitude';
+    end
     Kose_No = cidx';
 
     PAFTA_KOSE = table(Kose_No, Latitude, Longitude);

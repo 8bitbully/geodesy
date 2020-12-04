@@ -2,48 +2,56 @@ clearvars; clc;
 % Version: 9.9.0.1467703 (R2020b)
 
 main = localfunctions;
-[kose, kenar, alan, agirlik, jeosentrik] = getFunctions;
-% elipsoid secimi
-e = ReferenceEllipsoid('hayford');
+% 100000'lik paftanin sol alt B, L cografi koordinatlari girilir, grs80 ve
+% hayford ellipsoidlerinde 100000, 50000, 25000'lik paftaların
+% hesaplamalarını excel'e yazdırır.
 
-% pafta secimi
-pf = Pafta.PAFTA_100;
+vertexFunction(39.5, 37);
 
-% pafta indexleri
-[cidx, area, edge] = paftaEdge(pf);
-[B, L] = paftaParser(pf, 39.5, 40.5);
+% cografi koordinatlari vertexFunction' a yazdıktan sonra, a000365599
+% scriptini calistirin. (Run or F5)
+% cikan sonuclar output dosyasina gelir.
 
-% Pafta köse koordinatlari:
-PAFTA_KOSE = kose(cidx, B, L);
+function vertexFunction(lat, long)
+    ELLIPSOID_NAME = ["grs80", "hayford"];
+    PAFTA_LIST = [Pafta.PAFTA_100, Pafta.PAFTA_50, Pafta.PAFTA_25];
+    PAFTA_NAME = ["-100", "-50", "-25"];
+    for i = 1 : length(ELLIPSOID_NAME)
+        for j = 1 : length(PAFTA_NAME)
+            [kose, kenar, alan, agirlik, jeosentrik] = getFunctions;
+            % elipsoid secimi
+            e = ReferenceEllipsoid(ELLIPSOID_NAME(i));
 
-% Kenar uzunluklari:
-KENAR = kenar(e, edge, B, L);
+            % pafta secimi
+            pf = PAFTA_LIST(j);
 
-% Pafta Alani
-ALAN = alan(e, area, B, L);
+            % pafta indexleri
+            [cidx, area, edge] = paftaEdge(pf);
+            [B, L] = paftaParser(pf, lat, long);
 
-% Agirlik merkezi yaricaplari
-% return: - N - R - M -
-AGIRLIK = agirlik(e, area, B);
+            % Pafta köse koordinatlari:
+            PAFTA_KOSEdegrees = kose(cidx, B, L); % degrees
+            PAFTA_KOSEdms = kose(cidx, B, L, 'dms'); % degrees-minutes-seconds
 
-% Jeosentrik Koordinatlar
-GEOCENTRIC = jeosentrik(e, cidx, B, L);
+            % Kenar uzunluklari:
+            KENAR = kenar(e, edge, B, L);
 
-% terminal log ciktisini yazdirma
-% diary hayford-25.txt
-% PAFTA_KOSE
-% fprintf('--------------------------------')
-% KENAR
-% fprintf('--------------------------------')
-% ALAN
-% fprintf('--------------------------------')
-% AGIRLIK
-% fprintf('--------------------------------')
-% JEOCENTRIC
-% diary off
+            % Pafta Alani
+            ALAN = alan(e, area, B, L);
 
-% tablolari excel'e yazdirma fonksiyonu
-excelWriter = main{1};
+            % Agirlik merkezi yaricaplari
+            % return: - N - R - M -
+            AGIRLIK = agirlik(e, area, B);
+
+            % Jeosentrik Koordinatlar
+            GEOCENTRIC = jeosentrik(e, cidx, B, L);
+
+            writeExcel(['output/',char(ELLIPSOID_NAME(i)), char(PAFTA_NAME(j))], ...
+                PAFTA_KOSEdegrees, PAFTA_KOSEdms, KENAR, ALAN, AGIRLIK, GEOCENTRIC)
+        end
+    end
+end
+
 
 % tablolari excel'e yazdirma fonksiyonu
 %   args:
@@ -56,6 +64,7 @@ excelWriter = main{1};
 %   command window:
 %   excelWriter('hayford-25', PAFTA_KOSE, KENAR, ALAN, AGIRLIK, GEOCENTRIC)
 function writeExcel(filename, varargin)
+    if ~isfolder('output'); mkdir('output'); end
     n = length(varargin);
 %     T = table(content);
     filename = [filename, '.xlsx'];
