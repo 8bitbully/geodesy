@@ -26,7 +26,7 @@
 %   TODO:  * function signatures
 %               * Error handling
 %               * Test
-classdef Ellipsoid < NivoEllipsoid
+classdef Ellipsoid < src.NivoEllipsoid
     properties (Dependent = true, Access = public)
         SemimajorAxis double
         SemiminorAxis double

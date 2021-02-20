@@ -1,8 +1,8 @@
-clc;clearvars;
+clearvars, clc,
 
 % Reference Ellipsoid
 
-ellipsoid = ReferenceEllipsoid('hayford'); % grs80
+ellipsoid = geodesy.refEllipsoid('hayford'); % grs80
 
 %%
 % geocentric
@@ -83,3 +83,31 @@ ellipsoid = ReferenceEllipsoid('hayford'); % grs80
 
 % [M, N, R] = radiusCurveture(ellipsoid, B);
 % [M, N, R, Ra] = radiusCurveture(ellipsoid, B, A);
+
+%%
+% Geographic coordinate to Gauss-Kruger Coordinate
+
+% B = 41.125;
+% L = 27.75;
+% 
+% [Yg, Xg] = geodesy.geographic2GaussKruger(ellipsoid, B, L);
+
+%%
+% Geographic coordinate to UTM coordinate
+
+% B = 41.125;
+% L = 27.75;
+% [right, upper] = geodesy.geographic2UTM(ellipsoid, B, L, '3');
+% [right, upper] = geodesy.geographic2UTM(ellipsoid, B, L, '6');
+
+%%
+% Helmert 2d transform,
+
+% data = importdata('data/ed50itrf.txt');
+% ed50 = data(:, 1:2);
+% itrf = data(:, 3:4);
+
+% t = geodesy.conformalParameters(ed50(1:2, :), itrf(1:2, :));
+% t = geodesy.adjustmentConformalParameters(ed50, itrf);
+
+% [X, Y] = geodesy.helmert2DTransform(t, [upper', right']);

@@ -47,7 +47,7 @@
 % @date: 20202811
 % 
 %               
-classdef ReferenceEllipsoid < Ellipsoid
+classdef ReferenceEllipsoid < src.Ellipsoid
     properties
         Name string
     end
