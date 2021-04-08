@@ -6,7 +6,7 @@
 %   returns:
 %       right: Northing coordinates,
 %       upper: Easting coordinates
-function [right, upper] = geographic2UTM(ellipsoid, B, L, degrees) % L0
+function [right, upper] = geographic2utm(ellipsoid, B, L, degrees) % L0
     % L0 = dom;
     L0 = src.dom(L, degrees);
     [Yg, Xg, ~] = src.geog2gk(ellipsoid, B, L, L0);

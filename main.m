@@ -97,8 +97,8 @@ ellipsoid = geodesy.refEllipsoid('hayford'); % grs80
 
 % B = 41.125;
 % L = 27.75;
-% [right, upper] = geodesy.geographic2UTM(ellipsoid, B, L, '3');
-% [right, upper] = geodesy.geographic2UTM(ellipsoid, B, L, '6');
+% [right, upper] = geodesy.geographic2utm(ellipsoid, B, L, '3');
+% [right, upper] = geodesy.geographic2utm(ellipsoid, B, L, '6');
 
 %%
 % Helmert 2d transform,
